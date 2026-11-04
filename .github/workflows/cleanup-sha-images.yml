@@ -27,4 +27,4 @@ jobs:
           # Preserve every non-sha- tag. The colon check avoids matching digests.
           exclude-tags: '^(?!sha-)[^:]+$'
           delete-untagged: false
-          dry-run: true
+          dry-run: false
