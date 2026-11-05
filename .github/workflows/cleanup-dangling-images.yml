@@ -17,10 +17,23 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: Calculate age cutoff through 2025-05-28 (UTC)
+        id: cutoff
+        shell: bash
+        run: |
+          cutoff=$(date -d '2025-05-29T00:00:00Z' +%s)
+          age=$(( $(date +%s) - cutoff ))
+          if (( age <= 0 )); then
+            echo 'The cleanup cutoff must be in the past.' >&2
+            exit 1
+          fi
+          echo "age=$age seconds" >> "$GITHUB_OUTPUT"
+
       # Untagged architecture manifests can still belong to a tagged image.
       - name: Delete untagged and unreferenced versions
         uses: dataaxiom/ghcr-cleanup-action@v1.2.2
         with:
           package: xray-core
           delete-untagged: true
+          older-than: ${{ steps.cutoff.outputs.age }}
           dry-run: true
