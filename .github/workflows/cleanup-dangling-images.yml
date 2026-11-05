@@ -13,7 +13,7 @@ concurrency:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 360
     permissions:
       packages: write
     steps:
@@ -36,4 +36,4 @@ jobs:
           package: xray-core
           delete-untagged: true
           older-than: ${{ steps.cutoff.outputs.age }}
-          dry-run: true
+          dry-run: false
